@@ -45,6 +45,7 @@ class App : Application() {
     var isVip = false
     var isAI = false
     companion object instance {
+        @JvmStatic
         var serialNumber: String = ""
         var BASE_URL: String = ""
         lateinit var TTS: TextToSpeech//tts语速

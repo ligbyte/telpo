@@ -5,6 +5,7 @@ package com.stkj.cashier.app.mode
 //import com.common.face.api.FaceUtil
 //import com.telpo.tps550.api.led.Led900
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -33,6 +34,7 @@ import com.stkj.cashier.app.base.helper.CommonTipsHelper
 import com.stkj.cashier.app.main.DifferentDisplay.Companion.isStartFaceScan
 import com.stkj.cashier.app.stat.ConsumeStatFragment
 import com.stkj.cashier.bean.MessageEventBean
+import com.stkj.cashier.cbgfacepass.FacePassHelper
 import com.stkj.cashier.config.MessageEventType
 import com.stkj.cashier.constants.Constants
 import com.stkj.cashier.databinding.AmountFragment580Binding
@@ -100,6 +102,7 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
         @Volatile
         var mIsPaying = false
     }
+    @SuppressLint("AutoDispose", "CheckResult")
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
         EventBus.getDefault().post(MessageEventBean(MessageEventType.AmountNotice2))
@@ -576,6 +579,7 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
 
     }
 
+    @SuppressLint("AutoDispose", "CheckResult")
     private fun getPayStatus(payNo: String) {
         Observable.timer(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -1176,7 +1180,7 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
                                 binding.tvStatus.text = "-"
                                 scanCodeCallback?.stopScan()
                                 // 下载人脸
-//                                var mainActivity = activity as MainActivity
+                                var mainActivity = activity as MainActivity
 //                                Thread(Runnable {
 //                                    App.mFacePassHandler?.clearAllGroupsAndFaces()
 //                                    createGroup()
@@ -1186,9 +1190,9 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
 //                                    mainActivity.callBack = true
 //                                    LogUtils.e("lime== 全量更新弹窗")
 //                                    mainActivity.companyMember(0)
-//
+//                                    mActivity?.getWeakRefHolder(FacePassHelper::class.java)?.deleteAllFaceGroup(true);
 //                                }).start()
-
+                                mainActivity?.getWeakRefHolder(FacePassHelper::class.java)?.deleteAllFaceGroup(true);
                             } else if (!mIsPaying) {
                                 //Led900(activity)?.on(100)
 //                                FaceUtil.GPIOSet("rgb_led_en", 1);

@@ -1019,11 +1019,11 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
             LogUtils.w("lime============ totalFaceCount: " + totalFaceCount)
 
 
-            LogUtils.w(
-                "lime============  sdk Face Count face_pass_1: " + App?.mFacePassHandler?.getLocalDyGroupFaceNum(
-                    "face_pass_1"
-                )
-            )
+//            LogUtils.w(
+//                "lime============  sdk Face Count face_pass_1: " + App?.mFacePassHandler?.getLocalDyGroupFaceNum(
+//                    "face_pass_1"
+//                )
+//            )
 
 
             //   companyMember()
@@ -1385,13 +1385,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
 
         val path: String = makeDownloadPath()
         Log.d(TAG,"limecheckAppVersion 显示更新进度条 1381")
-        UpdateService.Builder.create(data?.url)
-            .setStoreDir(path)
-            .setIcoResId(R.mipmap.ic_main_logo)
-            .setIcoSmallResId(R.mipmap.ic_main_logo)
-            .setDownloadSuccessNotificationFlag(Notification.DEFAULT_ALL)
-            .setDownloadErrorNotificationFlag(Notification.DEFAULT_ALL)
-            .build(this, null)
+//        UpdateService.Builder.create(data?.url)
+//            .setStoreDir(path)
+//            .setIcoResId(R.mipmap.ic_main_logo)
+//            .setIcoSmallResId(R.mipmap.ic_main_logo)
+//            .setDownloadSuccessNotificationFlag(Notification.DEFAULT_ALL)
+//            .setDownloadErrorNotificationFlag(Notification.DEFAULT_ALL)
+//            .build(this, null)
     }
 
     private fun makeDownloadPath(): String {

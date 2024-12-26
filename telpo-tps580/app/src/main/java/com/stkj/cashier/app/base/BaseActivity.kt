@@ -29,6 +29,8 @@ import com.stkj.cashier.App
 import com.stkj.cashier.R
 import com.stkj.cashier.app.home.HomeActivity
 import com.stkj.cashier.app.main.MainActivity
+import com.stkj.cashier.cbgfacepass.common.ActivityHolderHelper
+import com.stkj.cashier.cbgfacepass.common.ActivityWeakRefHolder
 import com.stkj.cashier.constants.Constants
 import es.dmoral.toasty.Toasty
 
@@ -36,6 +38,8 @@ import es.dmoral.toasty.Toasty
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBinding> : BaseActivity<VM,VDB>(){
+
+    var activityHolderHelper: ActivityHolderHelper = ActivityHolderHelper()
 
     fun getApp() = application as App
 
@@ -69,6 +73,11 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
         BarUtils.setNavBarVisibility(this, true)
     }
     //-----------------------------------
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityHolderHelper.clear();
+    }
 
     fun showToast(@StringRes resId: Int){
         Toasty.normal(context,resId).show()
@@ -206,6 +215,14 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
         if(v.id == R.id.ivLeft){
             finish()
         }
+    }
+
+    fun <T : ActivityWeakRefHolder?> getWeakRefHolder(tClass: Class<T>?): T? {
+        return activityHolderHelper.get(tClass!!, this)
+    }
+
+    fun <T : ActivityWeakRefHolder?> clearWeakRefHolder(tClass: Class<T>?) {
+        activityHolderHelper.clear(tClass!!)
     }
 
     // 定义一个回调接口

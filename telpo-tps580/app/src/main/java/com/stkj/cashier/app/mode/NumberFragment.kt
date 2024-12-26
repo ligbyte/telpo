@@ -1,5 +1,6 @@
 package com.stkj.cashier.app.mode
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -116,6 +117,7 @@ class NumberFragment : BaseFragment<ModeViewModel, NumberFragmentBinding>() {
         }
     }
 
+    @SuppressLint("AutoDispose")
     private fun delayToScan() {
 
         EventBus.getDefault().post(MessageEventBean(MessageEventType.NumberNotice))
@@ -245,6 +247,7 @@ class NumberFragment : BaseFragment<ModeViewModel, NumberFragmentBinding>() {
         }
     }
 
+    @SuppressLint("AutoDispose")
     private fun getPayStatus(payNo: String) {
         Observable.timer(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
