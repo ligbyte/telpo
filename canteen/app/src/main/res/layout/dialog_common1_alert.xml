@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_6e4F4D4D"
+    android:clickable="true">
+
+    <com.stkj.common.ui.widget.shapelayout.ShapeLinearLayout
+        android:layout_width="@dimen/dp_359"
+        android:layout_height="@dimen/dp_200"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:radiusT="@dimen/dp_5"
+        app:solidColorT="@color/color_0b1227">
+
+        <TextView
+            android:id="@+id/tv_alert_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/dp_2_5"
+            android:text="是否为张志诚进行该笔退款？"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_25" />
+
+        <TextView
+            android:id="@+id/tv_alert_bottom_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_23"
+            android:lineSpacingExtra="@dimen/dp_2_5"
+            android:text="是请按确定键，否请按取消键"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_21" />
+
+    </com.stkj.common.ui.widget.shapelayout.ShapeLinearLayout>
+
+</FrameLayout>
