@@ -740,6 +740,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
 
     }
 
+    @SuppressLint("AutoDispose")
     private fun initCheckStatus() {
         var time = SPUtils.getInstance().getInt(Constants.FACE_HEAD_BEAT, 30).toLong()
         reportDeviceStatusDisposable = Observable.interval(0, time, TimeUnit.SECONDS)
@@ -758,6 +759,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
             }
     }
 
+    @SuppressLint("AutoDispose")
     private fun requestConsumptionType() {
         currentTimeDisposable?.dispose()
         currentTimeDisposable = Observable.interval(0, 60, TimeUnit.SECONDS)
@@ -797,6 +799,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
         LogUtils.e("checkCurrentAmountMode end")
     }
 
+    @SuppressLint("AutoDispose")
     private fun requestNetStatus() {
         netStatusDisposable?.dispose()
         netStatusDisposable = Observable.interval(0, 10, TimeUnit.SECONDS)

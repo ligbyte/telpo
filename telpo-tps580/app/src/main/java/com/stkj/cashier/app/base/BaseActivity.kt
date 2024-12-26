@@ -1,5 +1,6 @@
 package com.stkj.cashier.app.base
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
@@ -115,6 +116,7 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
 
     //-----------------------------------
 
+    @SuppressLint("ClickableViewAccessibility")
     fun setClickRightClearListener(tv: TextView) {
         tv.setOnTouchListener { v: View?, event: MotionEvent ->
             when (event.action) {
@@ -134,6 +136,7 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     fun setClickRightEyeListener(et: EditText) {
         et.setOnTouchListener { v: View?, event: MotionEvent ->
             when (event.action) {
@@ -168,7 +171,7 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
     //-----------------------------------
 
     fun startActivity(clazz: Class<*>,username: String? = null){
-        var intent = newIntent(clazz)
+        val intent = newIntent(clazz)
         intent.putExtra(Constants.KEY_USERNAME,username)
         startActivity(intent)
     }
@@ -187,9 +190,9 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         val options: ActivityOptions = ActivityOptions.makeBasic()
 
-        var mDisplayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager;
+        val mDisplayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager;
         //得到显示器数组
-        var displays = mDisplayManager.displays
+        val displays = mDisplayManager.displays
 
         if (displays.size>1){
             options.setLaunchDisplayId(  displays[1].displayId)
@@ -200,7 +203,7 @@ abstract class BaseActivity<VM : BaseViewModel<out BaseModel>,VDB : ViewDataBind
         startActivity(intent,options.toBundle())
     }
     fun startWebActivity(url: String,title: String? = null){
-        var intent = Intent(context, WebActivity::class.java)
+        val intent = Intent(context, WebActivity::class.java)
         title?.let {
             intent.putExtra(Constants.KEY_TITLE,it)
         }
