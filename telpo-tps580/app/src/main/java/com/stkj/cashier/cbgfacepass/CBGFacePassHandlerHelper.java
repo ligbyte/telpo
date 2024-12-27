@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
+import com.stkj.cashier.App;
 import com.stkj.cashier.cbgfacepass.model.CBGFacePassConfig;
 import com.stkj.cashier.cbgfacepass.model.CBGFacePassRecognizeResult;
 import com.stkj.cashier.cbgfacepass.model.RecognizeData;
@@ -730,7 +731,7 @@ public class CBGFacePassHandlerHelper extends ActivityWeakRefHolder {
         InputStream inputStream = null;
         if (readAssetCert) {
             try {
-                inputStream = AppManager.INSTANCE.getApplication().getAssets().open(filename);
+                inputStream = App.instance.getApplicationContext().getAssets().open(filename);
             } catch (IOException e) {
                 return "";
             }

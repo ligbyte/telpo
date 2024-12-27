@@ -1429,15 +1429,15 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
 
             MessageEventType.ProgressNumber -> {
                 LogUtils.e("进度条=========1427 " + message.obj)
-                if ((message.obj as Int)%5 == 0) {
+                if ((message.obj as Int)%3 == 0) {
                     ToastUtils.showLong("App更新中... " + message.obj + "%")
                 }
 //                binding.mainView.visibility = View.VISIBLE
                 if (progressDialog != null && progressDialog.isShowing) {
                     tvProgress.text = "" + message.obj
                     //sbProgress.progress = message.obj as Int
-                    if ((message.obj as Int)%5 == 0) {
-                        ToastUtils.showLong("App更新中... " + message.obj + "%")
+                    if ((message.obj as Int)%2 == 0) {
+                        ToastUtils.showShort("App更新中... " + message.obj + "%")
                     }
                 }
             }

@@ -182,7 +182,7 @@ class ServerAddressFragment : BaseFragment<SettingViewModel, ServerAddressFragme
 
     fun restartAppDelay(second: Long) {
         LogUtils.e("重启应用restartAppDelay")
-        //val context: Application = AppManager.INSTANCE.getApplication()
+        //val context: Application = App.instance.getApplicationContext()
         val launchIntent: Intent =
             requireContext().getPackageManager().getLaunchIntentForPackage(requireContext().getPackageName())!!
         val restartIntent: PendingIntent = PendingIntent.getActivity(

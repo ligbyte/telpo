@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
+import com.stkj.cashier.App;
 import com.stkj.cashier.cbgfacepass.model.BaseNetResponse;
 import com.stkj.cashier.cbgfacepass.net.ParamsUtils;
 import com.stkj.cashier.cbgfacepass.net.retrofit.RetrofitManager;
@@ -70,7 +71,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
 
     public FacePassHelper(@NonNull Activity activity) {
         super(activity);
-        AppGreenDaoOpenHelper daoOpenHelper = new AppGreenDaoOpenHelper(AppManager.INSTANCE.getApplication(), GreenDBConstants.FACE_DB_NAME, null);
+        AppGreenDaoOpenHelper daoOpenHelper = new AppGreenDaoOpenHelper(App.instance.getApplicationContext(), GreenDBConstants.FACE_DB_NAME, null);
         database = daoOpenHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(database);
         daoSession = daoMaster.newSession();
@@ -421,6 +422,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                     @Override
                     protected void onSuccess(BaseNetResponse<FacePassPeopleListInfo> baseNetResponse) {
                         FacePassPeopleListInfo responseData = baseNetResponse.getData();
+                        Log.d(TAG,"limeFacePassHelper 425");
                         if (responseData != null && responseData.getResults() != null && !responseData.getResults().isEmpty()) {
                             List<FacePassPeopleInfo> passPeopleInfoList = responseData.getResults();
                             addFacePassToLocal(passPeopleInfoList);
@@ -428,12 +430,14 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                 onFacePassListener.onLoadFacePassGroupEnd(passPeopleInfoList, "请求成功", false);
                             }
                         } else {
+                            Log.d(TAG,"limeFacePassHelper 433");
                             callbackFinishFacePass("请求数据为空", false);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.d(TAG,"limeFacePassHelper 440");
                         callbackFinishFacePass(e.getMessage(), true);
                     }
                 });
@@ -517,7 +521,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                 Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " imageData: " + imageData);
                                 Bitmap bitmap = null;
                                 try {
-                                    FutureTarget<Bitmap> futureTarget = GlideApp.with(AppManager.INSTANCE.getApplication())
+                                    FutureTarget<Bitmap> futureTarget = GlideApp.with(App.instance.getApplicationContext())
                                             .asBitmap()
                                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                                             .load(imageData)
@@ -738,6 +742,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
     }
 
     public void deleteAllFaceGroup(boolean needRequestAllFace) {
+        Log.d(TAG,"limeFacePassHelper 741");
         deleteAllFaceGroup(null, needRequestAllFace);
     }
 
@@ -753,6 +758,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
             return;
         }
         isDeleteAllFacePass = true;
+        Log.d(TAG,"limeFacePassHelper 756");
         Observable.create(new ObservableOnSubscribe<Integer>() {
                     @Override
                     public void subscribe(@io.reactivex.rxjava3.annotations.NonNull ObservableEmitter<Integer> emitter) throws Throwable {
@@ -779,6 +785,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                     protected void onSuccess(Integer integer) {
                         isDeleteAllFacePass = false;
                         ToastUtils.showLong("删除人脸库成功");
+                        Log.d(TAG,"limeFacePassHelper 785");
                         if (needRequestAllFace) {
                             requestAllFacePass();
                         }
@@ -794,6 +801,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                     public void onError(Throwable e) {
                         isDeleteAllFacePass = false;
                         ToastUtils.showLong("删除人脸库失败");
+                        Log.d(TAG,"limeFacePassHelper 800");
                         if (needRequestAllFace) {
                             requestAllFacePass();
                         }

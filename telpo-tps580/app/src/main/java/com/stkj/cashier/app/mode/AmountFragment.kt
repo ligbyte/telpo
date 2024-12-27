@@ -67,6 +67,8 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
 
     lateinit var scanCodeCallback: ScanCodeCallback
 
+    var facePassHelper: FacePassHelper? = null;
+
     var consumeStatFragment:ConsumeStatFragment = ConsumeStatFragment.newInstance()
 
     private val SPLITE_STRING = " "
@@ -1175,10 +1177,17 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
                             //ttsSpeak(getString(R.string.result_network_unavailable_error))
                             ttsSpeak("网络已断开，请检查网络。")
                         } else {
+                            if (!SystemUtils.isNetWorkActive(getApp())) {
+                                //ttsSpeak(getString(R.string.result_network_unavailable_error))
+                                ttsSpeak("网络已断开，请检查网络。")
+                                return false
+                            }
                             if (binding.tvAmount.text.toString().equals("99999999")) {
                                 binding.tvAmount.text = ""
                                 binding.tvStatus.text = "-"
+                                Log.d(TAG,"limeFacePassHelper 1181 ")
                                 scanCodeCallback?.stopScan()
+                                Log.d(TAG,"limeFacePassHelper 1183 ")
                                 // 下载人脸
                                 var mainActivity = activity as MainActivity
 //                                Thread(Runnable {
@@ -1192,7 +1201,13 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
 //                                    mainActivity.companyMember(0)
 //                                    mActivity?.getWeakRefHolder(FacePassHelper::class.java)?.deleteAllFaceGroup(true);
 //                                }).start()
-                                mainActivity?.getWeakRefHolder(FacePassHelper::class.java)?.deleteAllFaceGroup(true);
+                                Log.d(TAG,"limeFacePassHelper 1195 mainActivity == null: " + (mainActivity == null) )
+                                if (facePassHelper == null) {
+                                    facePassHelper = FacePassHelper(activity as MainActivity);
+                                }
+                                Log.d(TAG,"limeFacePassHelper 1195 facePassHelper == null: " + (facePassHelper == null) )
+                                facePassHelper!!.deleteAllFaceGroup(true);
+                                Log.d(TAG,"limeFacePassHelper 1196")
                             } else if (!mIsPaying) {
                                 //Led900(activity)?.on(100)
 //                                FaceUtil.GPIOSet("rgb_led_en", 1);

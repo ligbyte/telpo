@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 
+import com.stkj.cashier.App;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -141,11 +142,11 @@ public class StorageHelper {
      * 获取文件 (先获取外置目录[/Android/data/x.x.x/files/]，失败获取app安装文件目录[data/data/x.x.x/files])
      */
     private static String getExternalFileRootPath() {
-        File externalFile = AppManager.INSTANCE.getApplication().getExternalFilesDir(null);
+        File externalFile = App.instance.getApplicationContext().getExternalFilesDir(null);
         if (externalFile != null) {
             return externalFile.getAbsolutePath();
         } else {
-            return AppManager.INSTANCE.getApplication().getFilesDir().getAbsolutePath();
+            return App.instance.getApplicationContext().getFilesDir().getAbsolutePath();
         }
     }
 
