@@ -107,6 +107,7 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
     @SuppressLint("AutoDispose", "CheckResult")
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        try{
         EventBus.getDefault().post(MessageEventBean(MessageEventType.AmountNotice2))
         LogUtils.e("MessageEventType.AmountNotice2 initData")
         layoutManager = LinearLayoutManager(requireActivity());//添加布局管理器
@@ -422,6 +423,10 @@ class AmountFragment : BaseFragment<ModeViewModel, AmountFragment580Binding>(),
         })
 
         CommonTipsHelper.INSTANCE.setMainTipsView(binding.ctvAmount)
+
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
 

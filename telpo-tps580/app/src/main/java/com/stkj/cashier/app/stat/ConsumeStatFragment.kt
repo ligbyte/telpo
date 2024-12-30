@@ -34,6 +34,7 @@ class ConsumeStatFragment :
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        try{
         viewModel.consumeStatResult.observe(this) {
             isRequestingPageData = false
             if (it.code == 10000 && !it.data.isNullOrEmpty()) {
@@ -48,6 +49,9 @@ class ConsumeStatFragment :
         }
         currentSelectIndex = -1
         scrollNextItem()
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
     /**

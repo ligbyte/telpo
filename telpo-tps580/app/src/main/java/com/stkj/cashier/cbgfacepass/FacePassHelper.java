@@ -437,7 +437,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG,"limeFacePassHelper 440");
+                        Log.e(TAG,"limeFacePassHelper 440" + e.getMessage());
                         callbackFinishFacePass(e.getMessage(), true);
                     }
                 });

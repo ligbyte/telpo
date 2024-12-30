@@ -54,6 +54,7 @@ import com.stkj.cashier.bean.ConsumeRefundListBean as ConsumeRefundListBean1
 
 class DifferentDisplay : Presentation, CameraManager.CameraListener, View.OnClickListener {
 
+    val TAG = "DifferentDisplay"
     private var companyMember: CompanyMemberdbEntity? = null
     private lateinit var tvTime: TextView
     private lateinit var tvCompanyName: TextView
@@ -113,6 +114,7 @@ class DifferentDisplay : Presentation, CameraManager.CameraListener, View.OnClic
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
+        try{
         LogUtils.e("副屏onCreate")
         setCancelable(false)
         setContentView(R.layout.layout_different_display_2)
@@ -175,6 +177,10 @@ class DifferentDisplay : Presentation, CameraManager.CameraListener, View.OnClic
         SystemEventHelper.INSTANCE.addSystemEventListener(systemEventListener)
         //event事件
         EventBus.getDefault().register(this)
+
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
     /**

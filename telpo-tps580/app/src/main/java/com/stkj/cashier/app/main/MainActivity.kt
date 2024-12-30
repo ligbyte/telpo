@@ -140,7 +140,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
     var latch: CountDownLatch? = null
 
     //lateinit var progressDialog: AlertDialog //更新进度弹窗
-    lateinit var allFaceDownDialog: AlertDialog //全量人脸
+    //lateinit var allFaceDownDialog: AlertDialog //全量人脸
     lateinit var tvProgress: TextView
     //lateinit var sbProgress: ProgressBar
 
@@ -156,13 +156,12 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
     //private var isFinish = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        try{
         // 检查首页Activity是否存在
         App.mMainActivity = this
         super.onCreate(savedInstanceState)
 
         initHandler();
-
-
 
         mainFragment.amountFragment.scanCodeCallback = object : ScanCodeCallback {
             override fun startScan() {
@@ -184,8 +183,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
         }
 
 
-//        AdbCommandExecutor.executeAdbCommand("input keyevent 26")
-//        AdbCommandExecutor.executeAdbCommand("input keyevent 26")
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
 
     }
 
@@ -398,6 +398,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        try{
         LogUtils.e("主页initData")
         //RkSysTool.getInstance().initContext(this)
         //RkSysTool.getInstance().setStatusBar(false)
@@ -503,9 +504,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
                 if (items.code == 10024) {
                     callBack = false
                     allFaceDown = false
-                    if (allFaceDownDialog != null) {
-                        allFaceDownDialog.dismiss()
-                    }
+//                    if (allFaceDownDialog != null) {
+//                        allFaceDownDialog.dismiss()
+//                    }
                     queueManager.clearTasks()
                     EventBus.getDefault().post(MessageEventBean(MessageEventType.FaceDBChangeEnd))
 
@@ -548,9 +549,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
                         allFaceDown = false
                         //isBreak=false
                         //isDownFace=false
-                        if (allFaceDownDialog != null) {
-                            allFaceDownDialog.dismiss()
-                        }
+//                        if (allFaceDownDialog != null) {
+//                            allFaceDownDialog.dismiss()
+//                        }
 
                         //显示人脸数
 //                        var faceTokens: Array<ByteArray>? = null
@@ -680,9 +681,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
             }
         })
 
-        val builder = AlertDialog.Builder(this, R.style.app_dialog)
-        allFaceDownDialog = builder.create()
-        allFaceDownDialog.setCancelable(false)
+//        val builder = AlertDialog.Builder(this, R.style.app_dialog)
+//        allFaceDownDialog = builder.create()
+//        allFaceDownDialog.setCancelable(false)
 
         keyEventResolver = KeyEventResolver(object : KeyEventResolver.OnScanSuccessListener {
             override fun onScanSuccess(barcode: String?) {
@@ -703,18 +704,21 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
 
         //系统事件监听
         SystemEventHelper.INSTANCE.addSystemEventListener(systemEventListener)
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
     private fun cancelAllFaceDownDialog() {
-        if (allFaceDownDialog.isShowing || allFaceDown) {
-            allFaceDownDialog.dismiss()
-            EventBus.getDefault()
-                .post(MessageEventBean(MessageEventType.FaceDBChangeEnd))
-            allFaceDown = false
-
-            latch = CountDownLatch(1) // 新的latch，初始计数为5
-            latch?.countDown()
-        }
+//        if (allFaceDownDialog.isShowing || allFaceDown) {
+//            allFaceDownDialog.dismiss()
+//            EventBus.getDefault()
+//                .post(MessageEventBean(MessageEventType.FaceDBChangeEnd))
+//            allFaceDown = false
+//
+//            latch = CountDownLatch(1) // 新的latch，初始计数为5
+//            latch?.countDown()
+//        }
     }
 
     private fun initMemberThread() {
@@ -1179,25 +1183,33 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
         mDisplayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager;
         //得到显示器数组
         var displays = mDisplayManager.displays
-        LogUtils.e("副屏数量" + displays.size)
+        Log.d(TAG,"limescreen 1177 屏数量" + displays.size)
 
         if (displays.size > 1) {
             try {
                 if (mPresentation == null) {
-                    LogUtils.e("副屏1")
+                    Log.d(TAG,"limescreen 1182 副屏1")
                     mPresentation = DifferentDisplay(this, displays[0])
                     mPresentation?.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-                    mPresentation?.show()
+                     Handler().postDelayed({
+                        Log.d(TAG,"limescreen 1190 副屏3")
+                        mPresentation?.show()
+                    }, 1000)
+
 
                 } else {
-                    LogUtils.e("副屏2")
+                    Log.d(TAG,"limescreen 1188 副屏2")
                     mPresentation = DifferentDisplay(this, displays[0])
                     mPresentation?.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-                    mPresentation?.show()
+
+                    Handler().postDelayed({
+                        Log.d(TAG,"limescreen 1190 副屏3")
+                        mPresentation?.show()
+                    }, 1000)
 
                 }
             } catch (e: Exception) {
-                LogUtils.e("副屏" + e.message)
+                Log.d(TAG,"limescreen 1195 副屏" + e.message)
             }
         } else {
             mDisplayManager.registerDisplayListener(object : DisplayManager.DisplayListener {
@@ -1220,9 +1232,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
                 try {
                     mPresentation?.show()
                 } catch (e: Exception) {
-                    LogUtils.e("副屏" + e.message)
+                    Log.d(TAG,"limescreen 1281 副屏" + e.message)
                 }
-                LogUtils.e("副屏3")
+                Log.d(TAG,"limescreen 1220 副屏3")
             }
         }
 
@@ -1367,34 +1379,34 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
         Log.d(TAG,"limecheckAppVersion 显示更新进度条 1358")
 
         //黑屏 begin
-        /*
-        val builder = AlertDialog.Builder(this, R.style.app_dialog)
-        progressDialog = builder.create()
-        progressDialog.setCancelable(false)
-        val view = View.inflate(this, R.layout.dialog_updata_version_progress, null)
-        tvProgress = view.findViewById<TextView>(R.id.tvProgress)
-        sbProgress = view.findViewById<ProgressBar>(R.id.sbProgress)
-        sbProgress.isEnabled = false
-        progressDialog.show()
-        LogUtils.e("显示更新进度条show")
-        progressDialog.window!!.setLayout(
-            (ScreenUtils.getAppScreenWidth() * 0.32).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
 
-        Objects.requireNonNull(progressDialog.window)!!.setContentView(view)
-        */
+//        val builder = AlertDialog.Builder(this, R.style.app_dialog)
+//        progressDialog = builder.create()
+//        progressDialog.setCancelable(false)
+//        val view = View.inflate(this, R.layout.dialog_updata_version_progress, null)
+//        tvProgress = view.findViewById<TextView>(R.id.tvProgress)
+//        sbProgress = view.findViewById<ProgressBar>(R.id.sbProgress)
+//        sbProgress.isEnabled = false
+//        progressDialog.show()
+//        LogUtils.e("显示更新进度条show")
+//        progressDialog.window!!.setLayout(
+//            (ScreenUtils.getAppScreenWidth() * 0.32).toInt(),
+//            LinearLayout.LayoutParams.WRAP_CONTENT
+//        )
+//
+//        Objects.requireNonNull(progressDialog.window)!!.setContentView(view)
+
         //黑屏 end
 
         val path: String = makeDownloadPath()
         Log.d(TAG,"limecheckAppVersion 显示更新进度条 1381")
-//        UpdateService.Builder.create(data?.url)
-//            .setStoreDir(path)
-//            .setIcoResId(R.mipmap.ic_main_logo)
-//            .setIcoSmallResId(R.mipmap.ic_main_logo)
-//            .setDownloadSuccessNotificationFlag(Notification.DEFAULT_ALL)
-//            .setDownloadErrorNotificationFlag(Notification.DEFAULT_ALL)
-//            .build(this, null)
+        UpdateService.Builder.create(data?.url)
+            .setStoreDir(path)
+            .setIcoResId(R.mipmap.ic_main_logo)
+            .setIcoSmallResId(R.mipmap.ic_main_logo)
+            .setDownloadSuccessNotificationFlag(Notification.DEFAULT_ALL)
+            .setDownloadErrorNotificationFlag(Notification.DEFAULT_ALL)
+            .build(this, null)
     }
 
     private fun makeDownloadPath(): String {
@@ -1429,16 +1441,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
 
             MessageEventType.ProgressNumber -> {
                 LogUtils.e("进度条=========1427 " + message.obj)
-                if ((message.obj as Int)%3 == 0) {
+                if ((message.obj as Int)%2 == 0) {
                     ToastUtils.showLong("App更新中... " + message.obj + "%")
                 }
 //                binding.mainView.visibility = View.VISIBLE
                 if (progressDialog != null && progressDialog.isShowing) {
                     tvProgress.text = "" + message.obj
                     //sbProgress.progress = message.obj as Int
-                    if ((message.obj as Int)%2 == 0) {
-                        ToastUtils.showShort("App更新中... " + message.obj + "%")
-                    }
                 }
             }
 
@@ -1473,15 +1482,15 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityBinding>(), View.On
         LogUtils.e("全量下发蒙层")
 
 
-        val view = View.inflate(this, R.layout.dialog_all_face_progress, null)
-
-        allFaceDownDialog.show()
-        LogUtils.e("显示全量下发蒙层show")
-        allFaceDownDialog.window!!.setLayout(
-            (ScreenUtils.getAppScreenWidth() * 0.32).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        Objects.requireNonNull(allFaceDownDialog.window)!!.setContentView(view)
+//        val view = View.inflate(this, R.layout.dialog_all_face_progress, null)
+//
+//        allFaceDownDialog.show()
+//        LogUtils.e("显示全量下发蒙层show")
+//        allFaceDownDialog.window!!.setLayout(
+//            (ScreenUtils.getAppScreenWidth() * 0.32).toInt(),
+//            LinearLayout.LayoutParams.WRAP_CONTENT
+//        )
+//        Objects.requireNonNull(allFaceDownDialog.window)!!.setContentView(view)
     }
 
     /**

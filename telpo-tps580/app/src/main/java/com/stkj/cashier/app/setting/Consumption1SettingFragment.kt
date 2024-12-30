@@ -135,7 +135,11 @@ class Consumption1SettingFragment :
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+     try{
         showFirstPage()
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
     private fun scrollPreItem() {
@@ -708,6 +712,7 @@ class Consumption1SettingFragment :
     }
 
     private fun showSecondPage() {
+        try{
         mPageIndex = 1
         currentSelectIndex = -1
         binding.llPageFirst.visibility = View.GONE
@@ -716,6 +721,9 @@ class Consumption1SettingFragment :
         Choreographer.getInstance().postFrameCallbackDelayed( {
             scrollNextItem()
         },50)
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
     }
 
     private fun refreshSecondPageData() {
