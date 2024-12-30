@@ -1,34 +1,33 @@
 package com.stkj.cashier
 
+//import dagger.hilt.android.qualifiers.ApplicationContext
 import android.app.Application
 import android.content.Context
 import android.os.Environment
 import android.speech.tts.TextToSpeech
-
 import androidx.multidex.MultiDex
-import com.stkj.cashier.util.util.CrashHandler
 import com.king.base.baseurlmanager.BaseUrlManager
 import com.king.base.baseurlmanager.bean.UrlInfo
 import com.king.kvcache.KVCache
-import com.stkj.cashier.bean.User
-import com.stkj.cashier.component.ComponentAppManager
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.stkj.cashier.app.base.helper.SystemEventHelper
 import com.stkj.cashier.app.main.MainActivity
 import com.stkj.cashier.app.splash.SplashActivity
 import com.stkj.cashier.bean.CurrentTimeInfoBean
 import com.stkj.cashier.bean.IntervalCardTypeBean
-import com.stkj.cashier.BuildConfig
-import com.stkj.cashier.app.base.helper.SystemEventHelper
+import com.stkj.cashier.bean.User
+import com.stkj.cashier.cbgfacepass.net.retrofit.RetrofitManager
+import com.stkj.cashier.component.ComponentAppManager
 import com.stkj.cashier.constants.Constants
 import com.stkj.cashier.glide.GlideAppHelper
 import com.stkj.cashier.util.camera.FacePassCameraType
+import com.stkj.cashier.util.util.CrashHandler
 import dagger.hilt.android.HiltAndroidApp
-//import dagger.hilt.android.qualifiers.ApplicationContext
 import es.dmoral.toasty.Toasty
 import mcv.facepass.FacePassHandler
 import timber.log.Timber
@@ -83,6 +82,7 @@ class App : Application() {
         } else {
             BASE_URL = Constants.BASE_TEST_URL
         }
+        RetrofitManager.INSTANCE.setDefaultBaseUrl(BASE_URL)
 //        BASE_URL = SPUtils.getInstance().getString(Constants.FACE_ADDRESS,"")
 //        LogUtils.e("reStartApp",App.BASE_URL)
         initTTS()

@@ -32,6 +32,7 @@ import com.stkj.cashier.cbgfacepass.common.AppManager;
 
 import com.stkj.cashier.util.rxjava.DefaultObserver;
 import com.stkj.cashier.util.rxjava.RxTransformerUtils;
+import com.stkj.cashier.util.util.GsonUtils;
 import com.stkj.cashier.util.util.TimeUtils;
 import com.stkj.cashier.util.util.ToastUtils;
 
@@ -426,6 +427,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                         if (responseData != null && responseData.getResults() != null && !responseData.getResults().isEmpty()) {
                             List<FacePassPeopleInfo> passPeopleInfoList = responseData.getResults();
                             addFacePassToLocal(passPeopleInfoList);
+                            Log.d(TAG,"limeFacePassHelper 429 " + GsonUtils.toJson(passPeopleInfoList));
                             for (OnFacePassListener onFacePassListener : facePassListenerHashSet) {
                                 onFacePassListener.onLoadFacePassGroupEnd(passPeopleInfoList, "请求成功", false);
                             }
@@ -454,7 +456,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
         List<AddLocalFacePassInfoWrapper> passInfoWrapperList = new ArrayList<>();
         int size = facePassPeopleInfoList.size();
         String addFacePassToLocalTime = TimeUtils.getNowString();
-        Log.d(TAG,"-facePassHelper-addFacePassToLocal--start--" + size + "time " + addFacePassToLocalTime);
+        Log.d(TAG,"lime-facePassHelper -addFacePassToLocal--start--" + size + "time " + addFacePassToLocalTime);
         for (int i = 0; i < size; i++) {
             AddLocalFacePassInfoWrapper facePassInfoWrapper = new AddLocalFacePassInfoWrapper(facePassPeopleInfoList.get(i));
             facePassInfoWrapper.setCurrentIndex(i + 1);
@@ -471,7 +473,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                         try {
                             //判断卡状态
                             if (facePassItemInfo.getCard_state() == 64) {
-                                Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64");
+                               Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64");
                                 //移除本地人脸item 信息
                                 FacePassPeopleInfoDao facePassPeopleInfoDao = daoSession.getFacePassPeopleInfoDao();
                                 FacePassPeopleInfo localPeopleInfo =
@@ -479,7 +481,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                                 .where(FacePassPeopleInfoDao.Properties.Unique_number.eq(facePassItemInfo.getUnique_number()))
                                                 .unique();
                                 if (localPeopleInfo != null) {
-                                    Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64 delete local face");
+                                   Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64 delete local face");
                                     //删除移除本地人脸状态为64
                                     facePassPeopleInfoDao.delete(localPeopleInfo);
                                     //获取本地数据库数量
@@ -502,7 +504,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                     });
                                     facePassInfoWrapper.setStatus(AddLocalFacePassInfoWrapper.STATE_FORBID);
                                 } else {
-                                    Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64 no local face");
+                                   Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " Card_state() == 64 no local face");
                                     facePassInfoWrapper.setStatus(AddLocalFacePassInfoWrapper.STATE_ERROR);
                                 }
                                 facePassInfoWrapper.setStatusMsg("卡状态为64");
@@ -518,7 +520,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                             int bindFaceGroupResult = -1;
                             if (cbgFacePassHandHelper != null) {
                                 String imageData = facePassItemInfo.getImgData();
-                                Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " imageData: " + imageData);
+                               Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " imageData: " + imageData);
                                 Bitmap bitmap = null;
                                 try {
                                     FutureTarget<Bitmap> futureTarget = GlideApp.with(App.instance.getApplicationContext())
@@ -528,12 +530,12 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                             .submit();
                                     bitmap = futureTarget.get();
                                 } catch (Throwable e) {
-                                    Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " load imageData error " + imageData);
+                                   Log.e(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " load imageData error " + imageData);
                                     e.printStackTrace();
                                 }
                                 FacePassAddFaceResult addFaceResult = cbgFacePassHandHelper.addFace(bitmap);
                                 if (addFaceResult != null) {
-                                    Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " addFaceResult: " + addFaceResult.result);
+                                   Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " addFaceResult: " + addFaceResult.result);
                                     /**
                                      * 0：成功
                                      * 1：没有检测到人脸
@@ -574,10 +576,10 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                     //存在数据，去更新数据
                                     facePassItemInfo.setOpening_date(TimeUtils.getNowString());
                                     if (localPeopleInfo == null) {
-                                        Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " insertLocalFace success");
+                                       Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " insertLocalFace success");
                                         facePassPeopleInfoDao.insert(facePassItemInfo);
                                     } else {
-                                        Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " insertLocalFace has exits update");
+                                       Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " insertLocalFace has exits update");
                                         //删除移除本地人脸
                                         String cbgFaceToken = localPeopleInfo.getCBGFaceToken();
                                         if (!TextUtils.isEmpty(cbgFaceToken)) {
@@ -609,7 +611,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                     facePassInfoWrapper.setStatus(AddLocalFacePassInfoWrapper.STATE_SUCCESS);
                                     facePassInfoWrapper.setStatusMsg("添加成功");
                                 } else {
-                                    Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " face callback net error " + baseNetResponse.getCode());
+                                   Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " face callback net error " + baseNetResponse.getCode());
                                     //删除已经添加的人脸库，如果网络请求失败的话
                                     if (cbgFacePassHandHelper != null && !TextUtils.isEmpty(localAddFaceToken)) {
                                         cbgFacePassHandHelper.deleteFace(localAddFaceToken.getBytes(StandardCharsets.ISO_8859_1));
@@ -618,7 +620,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                                     facePassInfoWrapper.setStatusMsg("请求人脸库回调接口失败");
                                 }
                             } else {
-                                Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " face callback net error body empty");
+                               Log.d(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " face callback net error body empty");
                                 //删除已经添加的人脸库，如果网络请求失败的话
                                 if (cbgFacePassHandHelper != null && !TextUtils.isEmpty(localAddFaceToken)) {
                                     cbgFacePassHandHelper.deleteFace(localAddFaceToken.getBytes(StandardCharsets.ISO_8859_1));
@@ -628,7 +630,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                             }
                         } catch (Throwable e) {
                             e.printStackTrace();
-                            Log.d(TAG,"-facePassHelper-handleFacePassInfo--cardNumber: " + cardNumber + " try catch error: " + e.getMessage());
+                           Log.e(TAG,"lime-facePassHelper -handleFacePassInfo--cardNumber: " + cardNumber + " try catch error: " + e.getMessage());
                             //删除已经添加的人脸库，如果网络请求失败的话
                             CBGFacePassHandlerHelper cbgFacePassHandHelper = ActivityHolderFactory.get(CBGFacePassHandlerHelper.class, activityWithCheck);
                             if (cbgFacePassHandHelper != null && !TextUtils.isEmpty(localAddFaceToken)) {
@@ -660,7 +662,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                         }
                         //加载成功继续请求下发(除非请求数据为空)
                         if (addLocalFacePassInfoWrapper.isEndIndex()) {
-                            Log.d(TAG,"-facePassHelper-addFacePassToLocal--end--" + size + "time " + addFacePassToLocalTime);
+                           Log.d(TAG,"lime-facePassHelper -addFacePassToLocal--end--" + size + "time " + addFacePassToLocalTime);
                             requestFacePass(1, true);
                         }
                     }
@@ -801,7 +803,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
                     public void onError(Throwable e) {
                         isDeleteAllFacePass = false;
                         ToastUtils.showLong("删除人脸库失败");
-                        Log.d(TAG,"limeFacePassHelper 800");
+                        Log.e(TAG,"limeFacePassHelper 800");
                         if (needRequestAllFace) {
                             requestAllFacePass();
                         }
@@ -819,7 +821,7 @@ public class FacePassHelper extends ActivityWeakRefHolder {
      * 是否正在删除或添加本地人脸数据库
      */
     public boolean isAddOrDeleteLocalFacePass() {
-        Log.d(TAG,"-facePassHelper--isAddOrDeleteLocalFacePass isRequestFacePass = " + isRequestFacePass + " isDeleteAllFacePass = " + isDeleteAllFacePass + " isDeleteSingleFacePass = " + isDeleteSingleFacePass);
+       Log.d(TAG,"lime-facePassHelper --isAddOrDeleteLocalFacePass isRequestFacePass = " + isRequestFacePass + " isDeleteAllFacePass = " + isDeleteAllFacePass + " isDeleteSingleFacePass = " + isDeleteSingleFacePass);
         return isRequestFacePass || isDeleteAllFacePass || isDeleteSingleFacePass;
     }
 
@@ -833,106 +835,106 @@ public class FacePassHelper extends ActivityWeakRefHolder {
     public interface OnFacePassListener {
         //加载单个人脸成功(插入本地数据库和单个人脸回调)
         default void onLoadSingleFacePaceSuccess(AddLocalFacePassInfoWrapper passPeopleInfo, int currentIndex, int totalCount) {
-            Log.d(TAG,"-facePassHelper--onLoadSingleFacePaceSuccess--passPeopleInfo:" + passPeopleInfo.getFacePassPeopleInfo().getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex);
+           Log.d(TAG,"lime-facePassHelper --onLoadSingleFacePaceSuccess--passPeopleInfo:" + passPeopleInfo.getFacePassPeopleInfo().getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex);
         }
 
         //加载单个人脸失败
         default void onLoadSingleFacePaceError(AddLocalFacePassInfoWrapper passPeopleInfo, String msg, int currentIndex, int totalCount) {
-            Log.d(TAG,"-facePassHelper--onLoadSingleFacePaceError--passPeopleInfo:" + passPeopleInfo.getFacePassPeopleInfo().getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex + " msg:" + msg);
+           Log.e(TAG,"lime-facePassHelper --onLoadSingleFacePaceError--passPeopleInfo:" + passPeopleInfo.getFacePassPeopleInfo().getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex + " msg:" + msg);
         }
 
         default void onDeleteSingleFacePace(FacePassPeopleInfo passPeopleInfo, int currentIndex, int totalCount) {
-            Log.d(TAG,"-facePassHelper--onDeleteSingleFacePace--passPeopleInfo:" + passPeopleInfo.getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex);
+           Log.d(TAG,"lime-facePassHelper --onDeleteSingleFacePace--passPeopleInfo:" + passPeopleInfo.getPhone() + " totalCount:" + totalCount + " currentIndex:" + currentIndex);
         }
 
         //开始加载一次人脸接口
         default void onLoadFacePassGroupStart() {
-            Log.d(TAG,"-facePassHelper--onLoadFacePassGroupStart--requestTime:" + TimeUtils.getNowString());
+           Log.d(TAG,"lime-facePassHelper --onLoadFacePassGroupStart--requestTime:" + TimeUtils.getNowString());
         }
 
         //加载一次人脸接口成功
         default void onLoadFacePassGroupEnd(List<FacePassPeopleInfo> facePassPeopleInfoList, String msg, boolean isError) {
-            Log.d(TAG,"-facePassHelper--onLoadFacePassGroupEnd--requestTime:" + TimeUtils.getNowString() + " facePassPeopleInfoList:" + (facePassPeopleInfoList == null ? "0" : facePassPeopleInfoList.size()) + " msg:" + msg + " isError:" + isError);
+           Log.d(TAG,"lime-facePassHelper --onLoadFacePassGroupEnd--requestTime:" + TimeUtils.getNowString() + " facePassPeopleInfoList:" + (facePassPeopleInfoList == null ? "0" : facePassPeopleInfoList.size()) + " msg:" + msg + " isError:" + isError);
         }
 
         default void onAddFacePassToLocalError(String msg) {
-            Log.d(TAG,"-facePassHelper--onAddFacePassToLocalError--msg:" + msg);
+           Log.e(TAG,"lime-facePassHelper --onAddFacePassToLocalError--msg:" + msg);
         }
 
         default void onDeleteAllFacePassSuccess(boolean needRequestAllFace) {
-            Log.d(TAG,"-facePassHelper--onDeleteAllFacePassSuccess--deleteTime:" + TimeUtils.getNowString());
+           Log.d(TAG,"lime-facePassHelper --onDeleteAllFacePassSuccess--deleteTime:" + TimeUtils.getNowString());
         }
 
         default void onDeleteAllFacePassError(boolean needRequestAllFace, String msg) {
-            Log.d(TAG,"-facePassHelper--onDeleteAllFacePassError--deleteTime:" + TimeUtils.getNowString() + " msg:" + msg);
+           Log.e(TAG,"lime-facePassHelper --onDeleteAllFacePassError--deleteTime:" + TimeUtils.getNowString() + " msg:" + msg);
         }
 
         default void onGetFacePassLocalCount(long totalCount) {
-            Log.d(TAG,"-facePassHelper--onGetFacePassLocalCount-totalCount:" + totalCount);
+           Log.d(TAG,"lime-facePassHelper --onGetFacePassLocalCount-totalCount:" + totalCount);
         }
 
         default void onGetFacePassLocalCountError(String msg) {
-            Log.d(TAG,"-facePassHelper--onGetFacePassLocalCountError-msg:" + msg);
+           Log.e(TAG,"lime-facePassHelper --onGetFacePassLocalCountError-msg:" + msg);
         }
     }
 
     public interface OnDeleteLocalFaceListener {
         default void onDeleteLocalFace(FacePassPeopleInfo facePassPeopleInfo) {
-            Log.d(TAG,"-facePassHelper--onDeleteLocalFace-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
+           Log.d(TAG,"lime-facePassHelper --onDeleteLocalFace-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
         }
 
         default void onDeleteError(FacePassPeopleInfo passPeopleInfo, String msg) {
-            Log.d(TAG,"-facePassHelper--onDeleteError-facePassPeopleInfo:" + passPeopleInfo.getPhone() + " msg: " + msg);
+           Log.e(TAG,"lime-facePassHelper --onDeleteError-facePassPeopleInfo:" + passPeopleInfo.getPhone() + " msg: " + msg);
         }
     }
 
     public interface OnQueryLocalFacePassListener {
         default void onQueryLocalFacePassSuccess(List<FacePassPeopleInfo> facePassPeopleInfoList) {
-            Log.d(TAG,"-facePassHelper--onQueryLocalFacePassSuccess--count:" + facePassPeopleInfoList.size());
+           Log.d(TAG,"lime-facePassHelper --onQueryLocalFacePassSuccess--count:" + facePassPeopleInfoList.size());
         }
 
         default void onQueryLocalFacePassError(String msg) {
-            Log.d(TAG,"-facePassHelper--onQueryLocalFacePassError-msg:" + msg);
+           Log.e(TAG,"lime-facePassHelper --onQueryLocalFacePassError-msg:" + msg);
         }
     }
 
     public interface OnDeleteAllFaceListener {
         default void onDeleteAllFace() {
-            Log.d(TAG,"-facePassHelper--onDeleteAllFace--success");
+           Log.d(TAG,"lime-facePassHelper --onDeleteAllFace--success");
         }
 
         default void onDeleteAllFaceError(String msg) {
-            Log.d(TAG,"-facePassHelper--onDeleteAllFaceError- msg: " + msg);
+           Log.e(TAG,"lime-facePassHelper --onDeleteAllFaceError- msg: " + msg);
         }
     }
 
     public interface OnHandleFaceTokenListener {
         default void onHandleLocalFace(String faceToken, FacePassPeopleInfo facePassPeopleInfo) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalFace-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
+           Log.d(TAG,"lime-facePassHelper --onHandleLocalFace-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
         }
 
         default void onHandleLocalFaceError(String faceToken) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalFaceError-" + faceToken);
+           Log.e(TAG,"lime-facePassHelper --onHandleLocalFaceError-" + faceToken);
         }
     }
 
     public interface OnHandleCardNumberListener {
         default void onHandleLocalCardNumber(String cardNumber, FacePassPeopleInfo facePassPeopleInfo) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalCardNumber-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
+           Log.d(TAG,"lime-facePassHelper --onHandleLocalCardNumber-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
         }
 
         default void onHandleLocalCardNumberError(String cardNumber) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalCardNumberError-" + cardNumber);
+           Log.e(TAG,"lime-facePassHelper --onHandleLocalCardNumberError-" + cardNumber);
         }
     }
 
     public interface OnHandlePhoneListener {
         default void onHandleLocalPhone(String phone, FacePassPeopleInfo facePassPeopleInfo) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalPhone-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
+           Log.d(TAG,"lime-facePassHelper --onHandleLocalPhone-facePassPeopleInfo:" + facePassPeopleInfo.getPhone());
         }
 
         default void onHandleLocalPhoneError(String phone) {
-            Log.d(TAG,"-facePassHelper--onHandleLocalPhoneError-" + phone);
+           Log.e(TAG,"lime-facePassHelper --onHandleLocalPhoneError-" + phone);
         }
     }
 }

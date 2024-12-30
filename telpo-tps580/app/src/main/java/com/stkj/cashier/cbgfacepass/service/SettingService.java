@@ -25,7 +25,7 @@ public interface SettingService {
     /**
      * 设备录入人员信息接口
      */
-    @GET("home/v3/index")
+    @GET("home/v2/index")
     Observable<BaseNetResponse<FacePassPeopleListInfo>> getAllFacePass(@QueryMap Map<String, String> requestParams);
 
 }
